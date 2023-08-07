@@ -1,0 +1,105 @@
+from tkinter import*
+import qrcode
+from PIL import Image,ImageTk
+from resizeimage import resizeimage
+class Qr_Generator:
+    def _init_(self,root):
+        self.root=root
+        self.root.geometry("1200x700+150+60")
+        self.root.title("QR Generator | Developed By Maithili")
+        self.root.resizable(False,False)
+
+        title=Label(self.root,text="QR Code Generator",font=("times new roman",40),bg='#126182',fg='white').place(x=0,y=0,relwidth=1)
+
+        #====Student Information=============
+        # =====variables========
+        self.var_stu_name=StringVar()
+        self.var_stu_ID=StringVar()
+        self.var_stu_email=StringVar()
+        self.var_stu_Department=StringVar()
+        self.var_stu_class=StringVar()
+        self.var_stu_admissionyear=StringVar()
+        self.var_stu_mobno=StringVar()
+        self.var_stu_add=StringVar()
+
+        stu_Frame=Frame(self.root,bd=3,relief=RIDGE,bg='white')
+        stu_Frame.place(x=50,y=100,width=700,height=550)
+
+        stu_title=Label(stu_Frame,text="Student Details",font=("goudyold style",20),bg='#012330',fg='white').place(x=0,y=0,relwidth=1)
+
+        lbl_name=Label(stu_Frame,text="Student Name",font=("times new roman",15,'bold'),bg='white').place(x=25,y=60)
+        lbl_ID=Label(stu_Frame,text="Student ID",font=("times new roman",15,'bold'),bg='white').place(x=25,y=100)
+        lbl_email=Label(stu_Frame,text="Email",font=("times new roman",15,'bold'),bg='white').place(x=25,y=140)
+        lbl_Department=Label(stu_Frame,text="Department",font=("times new roman",15,'bold'),bg='white').place(x=25,y=180)
+        lbl_class=Label(stu_Frame,text="Class",font=("times new roman",15,'bold'),bg='white').place(x=25,y=220)
+        lbl_admissionyear=Label(stu_Frame,text="Admission Year",font=("times new roman",15,'bold'),bg='white').place(x=25,y=260)
+        lbl_mobno=Label(stu_Frame,text="mobile no",font=("times new roman",15,'bold'),bg='white').place(x=25,y=300)
+        lbl_add=Label(stu_Frame,text="Address",font=("times new roman",15,'bold'),bg='white').place(x=25,y=340)
+
+
+        text_name=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_name,bg='lightblue').place(x=200,y=60)
+        text_ID=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_ID,bg='lightblue').place(x=200,y=100)
+        text_email=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_email,bg='lightblue').place(x=200,y=140)
+        text_Department=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_Department,bg='lightblue').place(x=200,y=180)
+        text_class=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_class,bg='lightblue').place(x=200,y=220)
+        text_admissionyear= Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_admissionyear,bg='lightblue').place(x=200,y=260)
+        text_mobno=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_mobno,bg='lightblue').place(x=200,y=300)
+        text_add=Entry(stu_Frame,font=("times new roman",17),textvariable=self.var_stu_add,bg='lightblue').place(x=200,y=340)
+
+        btn_generator=Button(stu_Frame,text='QR Generate',command=self.generate,font=("times new roman",20,'bold'),bg='lightblue',fg='black').place(x=130,y=460,width=180,height=30)
+        btn_clear=Button(stu_Frame,text='Clear',command=self.clear,font=("times new roman",22,'bold'), bg='lightblue',fg='black').place(x=330, y=460, width=150, height=30)
+
+
+        self.msg=''
+        self.lbl_msg=Label(stu_Frame,text=self.msg,font=("times new roman",20),bg='white',fg='darkgreen')
+        self.lbl_msg.place(x=0,y=400,relwidth=1)
+
+        # ====Student QR code window=============
+
+        qr_Frame=Frame(self.root,bd=3,relief=RIDGE,bg='white')
+        qr_Frame.place(x=800,y=150,width=340,height=440)
+
+        stu_title=Label(qr_Frame,text=" QR Code",font=("goudyold style",18),bg='#012330',fg='white').place(x=0,y=0,relwidth=1)
+
+        self.qr_code=Label(qr_Frame,text='No Qr\nAvailable',font=("times new roman",15),bg='#126182',fg='white',bd=1,relief=RIDGE)
+        self.qr_code.place(x=65,y=100,width=210,height=210)
+
+    def clear(self):
+        self.var_stu_name.set('')
+        self.var_stu_ID.set('')
+        self.var_stu_email.set('')
+        self.var_stu_Department.set('')
+        self.var_stu_class.set('')
+        self.var_stu_admissionyear.set('')
+        self.var_stu_mobno.set('')
+        self.var_stu_add.set('')
+        self.msg =''
+        self.lbl_msg.config(text=self.msg)
+        self.qr_code.config(image='')
+
+    def generate(self):
+
+        if   self.var_stu_name.get() == '' or self.var_stu_ID.get() == '' or self.var_stu_email.get() == '' or self.var_stu_Department.get() == '' or self.var_stu_class.get() == '' or self.var_stu_admissionyear.get() == '' or self.var_stu_mobno.get() == '' or self.var_stu_add.get() == '':
+             self.msg = 'All Field are Required!!!'
+             self.lbl_msg.config(text=self.msg,fg='red')
+
+        else:
+             self.msg = 'All Field are Required!!!'
+             self.lbl_msg.config(text=self.msg, fg='red')
+             qr_data=(f"Student Name:{self.var_stu_name.get()}\nStudent ID:{self.var_stu_ID.get()}\nEmail:{self.var_stu_email.get()}\nStudent Department:{self.var_stu_Department.get()}\nClass:{self.var_stu_class.get()}\nAdmission year:{self.var_stu_admissionyear.get()}\nMobile no:{self.var_stu_mobno.get()}\nAddress:{self.var_stu_add.get()}")
+             qr_code=qrcode.make(qr_data)
+             #print(qr_code)
+             qr_code=resizeimage.resize_cover(qr_code,[180,180])
+             qr_code.save("MTP/stu_"+str(self.var_stu_name.get())+'.png')
+             #=========code image update================
+             self.im=ImageTk.PhotoImage(file="MTP/stu_"+str(self.var_stu_name.get())+'.png')
+             self.qr_code.config(image=self.im)
+             #========updating notification==============
+             self.msg = 'QR Generated Successfully!!!'
+             self.lbl_msg.config(text=self.msg, fg='green')
+
+
+
+root=Tk()
+obj =Qr_Generator(root)
+root.mainloop()
